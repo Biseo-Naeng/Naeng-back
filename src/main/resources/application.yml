@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: naeng-biseo
+  servlet:
+    multipart:
+      max-request-size: 30MB
+      max-file-size: 30MB
+  datasource:
+    url: jdbc:h2:tcp://localhost/~/naeng-biseo
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true

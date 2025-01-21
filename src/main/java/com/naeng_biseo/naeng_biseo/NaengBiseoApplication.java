@@ -7,7 +7,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class NaengBiseoApplication {
 
 	public static void main(String[] args) {
-		System.out.println("start project!!g");
 		SpringApplication.run(NaengBiseoApplication.class, args);
 	}
 
