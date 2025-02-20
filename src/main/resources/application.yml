@@ -1,19 +1,15 @@
 spring:
   application:
     name: naeng-biseo
-  servlet:
-    multipart:
-      max-request-size: 30MB
-      max-file-size: 30MB
   datasource:
-    url: jdbc:h2:tcp://localhost/~/naeng-biseo
-    username: sa
+    url: jdbc:mysql://localhost:3306/naeng_biseo?useSSL=false&serverTimezone=UTC
+    username:
     password:
-    driver-class-name: org.h2.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
+    show-sql: true
     properties:
       hibernate:
-        show_sql: true
         format_sql: true
