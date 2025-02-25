@@ -10,7 +10,7 @@ public class NutritionalGoal {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer goalId;
 
-    @ManyToOne
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "userId")
     private User user;
 

@@ -17,7 +17,7 @@ public class Recipe {
     @Lob
     private String instructions;
 
-    @ManyToOne
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "userId")
     private User user;
 

@@ -10,12 +10,12 @@ public class Follower {
     @EmbeddedId
     private FollowerId id;
 
-    @ManyToOne
+    @ManyToOne(fetch=FetchType.LAZY)
     @MapsId("followerId")
     @JoinColumn(name = "followerId")
     private User follower;
 
-    @ManyToOne
+    @ManyToOne(fetch=FetchType.LAZY)
     @MapsId("followingId")
     @JoinColumn(name = "followingId")
     private User following;

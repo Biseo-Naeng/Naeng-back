@@ -10,12 +10,12 @@ public class BookMark {
     @EmbeddedId
     private BookMarkId id;
 
-    @ManyToOne
+    @ManyToOne(fetch=FetchType.LAZY)
     @MapsId("recipeId")
     @JoinColumn(name = "recipeId")
     private Recipe recipe;
 
-    @ManyToOne
+    @ManyToOne(fetch=FetchType.LAZY)
     @MapsId("userId")
     @JoinColumn(name = "userId")
     private User user;

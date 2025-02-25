@@ -10,7 +10,7 @@ public class WaterIntake {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer waterIntakeId;
 
-    @ManyToOne
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "userId")
     private User user;
 
