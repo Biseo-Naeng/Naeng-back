@@ -5,9 +5,13 @@ import java.util.Date;
 
 import com.naeng_biseo.naeng_biseo.domain.enums.Gender;
 import com.naeng_biseo.naeng_biseo.domain.enums.UserStatus;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "Users")
+@Getter
+@Setter
 public class User {
 
     @Id

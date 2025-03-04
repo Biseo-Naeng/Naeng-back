@@ -2,9 +2,13 @@ package com.naeng_biseo.naeng_biseo.domain.entities;
 
 import com.naeng_biseo.naeng_biseo.domain.enums.IngredientCategory;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "Ingredients")
+@Getter
+@Setter
 public class Ingredient {
 
     @Id
