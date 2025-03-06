@@ -1,12 +1,20 @@
 package com.naeng_biseo.naeng_biseo.domain.entities;
 
+import com.naeng_biseo.naeng_biseo.dto.UserDto;
 import jakarta.persistence.*;
+
 import java.util.Date;
 
 import com.naeng_biseo.naeng_biseo.domain.enums.Gender;
 import com.naeng_biseo.naeng_biseo.domain.enums.UserStatus;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "Users")
 public class User {
 
@@ -41,4 +49,15 @@ public class User {
     @Enumerated(EnumType.STRING)
     private UserStatus stats;
 
+    public User(UserDto.Create userCreateDto, String encryptedPassword) {
+        this.name = userCreateDto.getName();
+        this.birthDate = userCreateDto.getBirthDate();
+        this.phoneNumber = userCreateDto.getPhoneNumber();
+        this.email= userCreateDto.getEmail();
+        this.nickname= userCreateDto.getNickname();
+        this.gender = userCreateDto.getGender();
+        this.profilePicture= userCreateDto.getProfilePicture();
+        this.passwordHash = encryptedPassword;
+        this.stats = userCreateDto.getStats();
+    }
 }
