@@ -8,11 +8,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository repository;
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+    public List<UserDto.Response> findAll(){
+        List<User> user = repository.findAll();
+        return user.stream().map(UserDto.Response::new).collect(Collectors.toList());
+    }
 
     @Transactional
     public Integer save(UserDto.Create userCreateDto){
