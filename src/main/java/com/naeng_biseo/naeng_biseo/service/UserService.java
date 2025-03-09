@@ -36,4 +36,9 @@ public class UserService {
             throw new IllegalStateException("이미 존재하는 회원입니다.");
         }
     }
+
+    public UserDto.Response findOne(Long id){
+        User findOne = repository.findOne(id);
+        return new UserDto.Response(findOne);
+    }
 }

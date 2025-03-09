@@ -22,6 +22,12 @@ public class UserController {
         return BaseResponse.success(collect);
     }
 
+    @GetMapping
+    public BaseResponse findOneUser(Long id){
+        UserDto.Response user = service.findOne(id);
+        return BaseResponse.success(user);
+    }
+
     @PostMapping("/user")
     public BaseResponse saveUser(@RequestBody UserDto.Create userCreateDto){
         Integer id = service.save(userCreateDto);
