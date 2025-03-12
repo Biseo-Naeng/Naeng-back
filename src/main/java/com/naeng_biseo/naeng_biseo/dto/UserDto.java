@@ -27,9 +27,14 @@ public class UserDto {
         private String profilePicture;
         private String passWordHash;
         private UserStatus stats;
-
     }
-
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    public static class Login{
+        private String email;
+        private String passWordHash;
+    }
     @Getter
     @Setter
     @AllArgsConstructor

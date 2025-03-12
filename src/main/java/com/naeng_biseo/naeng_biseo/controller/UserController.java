@@ -4,25 +4,23 @@ import com.naeng_biseo.naeng_biseo.dto.UserDto;
 import com.naeng_biseo.naeng_biseo.exception.BaseResponse;
 import com.naeng_biseo.naeng_biseo.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/auth")
 public class UserController {
     private final UserService service;
 
-    @GetMapping
+    @GetMapping("/user")
     public BaseResponse findUser(){
         List<UserDto.Response> collect = service.findAll();
         return BaseResponse.success(collect);
     }
 
-    @GetMapping
+    @GetMapping("/user/{id}")
     public BaseResponse findOneUser(Long id){
         UserDto.Response user = service.findOne(id);
         return BaseResponse.success(user);
@@ -34,4 +32,11 @@ public class UserController {
         return BaseResponse.success(id);
     }
 
+    @PostMapping("/login")
+    public BaseResponse saveUser(@RequestBody UserDto.Login userLoginDto){
+        String email = userLoginDto.getEmail();
+        String passWordHash = userLoginDto.getPassWordHash();
+        Integer userId = service.login(email, passWordHash);
+        return BaseResponse.success("로그인에 성공했습니다.");
+    }
 }

@@ -30,11 +30,10 @@ public class UserRepository {
         em.remove(user);
     }
 
-    public User findByEmail(String email) {
+    public Optional<User>  findByEmail(String email) {
         List<User> users = em.createQuery("SELECT u FROM User u WHERE u.email = :email", User.class)
                 .setParameter("email", email)
                 .getResultList();
-        return users.isEmpty() ? null : users.get(0);
+        return users.stream().findFirst();
     }
-
 }

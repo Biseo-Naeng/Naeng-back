@@ -31,14 +31,23 @@ public class UserService {
         return saveUser.getUserId();
     }
     private void validateDuplicateUser(UserDto.Create userCreateDto) {
-        User findUser = repository.findByEmail(userCreateDto.getEmail());
-        if (findUser != null) {
+        repository.findByEmail(userCreateDto.getEmail()).ifPresent(user -> {
             throw new IllegalStateException("이미 존재하는 회원입니다.");
-        }
+        });
     }
 
     public UserDto.Response findOne(Long id){
         User findOne = repository.findOne(id);
         return new UserDto.Response(findOne);
+    }
+
+    public Integer login(String email, String passWordHash){
+        User user = repository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid email or password"));
+
+        if (!passwordEncoder.matches(passWordHash, user.getPasswordHash())) {
+            throw new IllegalArgumentException("Invalid email or password");
+        }
+        return user.getUserId();
     }
 }
