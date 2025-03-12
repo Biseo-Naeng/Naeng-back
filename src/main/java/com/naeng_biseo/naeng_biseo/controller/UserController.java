@@ -26,6 +26,12 @@ public class UserController {
         return BaseResponse.success(user);
     }
 
+    @DeleteMapping("/user/{id}")
+    public BaseResponse deleteUser(Long id){
+        service.delete(id);
+        return BaseResponse.success(id);
+    }
+
     @PostMapping("/user")
     public BaseResponse saveUser(@RequestBody UserDto.Create userCreateDto){
         Integer id = service.save(userCreateDto);

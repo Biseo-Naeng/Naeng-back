@@ -41,6 +41,11 @@ public class UserService {
         return new UserDto.Response(findOne);
     }
 
+    public void delete(Long id){
+        User user = repository.findOne(id);
+        repository.remove(user);
+    }
+
     public Integer login(String email, String passWordHash){
         User user = repository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid email or password"));
