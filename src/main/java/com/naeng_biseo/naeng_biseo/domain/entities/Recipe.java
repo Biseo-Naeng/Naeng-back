@@ -25,6 +25,6 @@ public class Recipe {
     private Date writeDate;
 
     @Column
-    private Integer view;
+    private Integer view = 0;
 
 }
