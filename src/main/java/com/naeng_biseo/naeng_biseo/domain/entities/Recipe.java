@@ -27,4 +27,7 @@ public class Recipe {
     @Column
     private Integer view = 0;
 
+    @Column(columnDefinition = "TEXT")
+    private String imageUrls; // 이미지 URL 리스트 (JSON 저장)
+
 }
