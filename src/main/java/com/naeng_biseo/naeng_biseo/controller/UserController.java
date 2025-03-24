@@ -1,16 +1,18 @@
 package com.naeng_biseo.naeng_biseo.controller;
 
+import com.naeng_biseo.naeng_biseo.dto.JwtToken;
 import com.naeng_biseo.naeng_biseo.dto.UserDto;
 import com.naeng_biseo.naeng_biseo.exception.BaseResponse;
 import com.naeng_biseo.naeng_biseo.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/auth")
 public class UserController {
     private final UserService service;
 
@@ -20,29 +22,35 @@ public class UserController {
         return BaseResponse.success(collect);
     }
 
-    @GetMapping("/user/{id}")
-    public BaseResponse findOneUser(Long id){
-        UserDto.Response user = service.findOne(id);
+    @GetMapping("/user/profile")
+    public BaseResponse findOneUser(@AuthenticationPrincipal UserDetails userDetails){
+        UserDto.Response user = service.findOne(userDetails.getUsername());
         return BaseResponse.success(user);
     }
 
-    @DeleteMapping("/user/{id}")
-    public BaseResponse deleteUser(Long id){
-        service.delete(id);
-        return BaseResponse.success(id);
+    @DeleteMapping("/user/profile")
+    public BaseResponse deleteUser(@AuthenticationPrincipal UserDetails userDetails){
+        service.delete(userDetails.getUsername());
+        return BaseResponse.success("삭제 성공");
     }
 
-    @PostMapping("/user")
+    @PatchMapping("/auth/sign-up")
     public BaseResponse saveUser(@RequestBody UserDto.Create userCreateDto){
         Integer id = service.save(userCreateDto);
         return BaseResponse.success(id);
     }
 
-    @PostMapping("/login")
+    @PostMapping("/user/profile")
+    public BaseResponse saveUser(@AuthenticationPrincipal UserDetails userDetails, UserDto.Update userUpdateDto){
+        UserDto.Response updatedUser = service.update(userDetails.getUsername(), userUpdateDto);
+        return BaseResponse.success(updatedUser);
+    }
+
+    @PostMapping("/auth/login")
     public BaseResponse saveUser(@RequestBody UserDto.Login userLoginDto){
         String email = userLoginDto.getEmail();
-        String passWordHash = userLoginDto.getPassWordHash();
-        Integer userId = service.login(email, passWordHash);
-        return BaseResponse.success("로그인에 성공했습니다.");
+        String password = userLoginDto.getPassword();
+        JwtToken jwtToken = service.login(email, password);
+        return BaseResponse.success(jwtToken);
     }
 }

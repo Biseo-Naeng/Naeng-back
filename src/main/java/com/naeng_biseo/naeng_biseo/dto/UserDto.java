@@ -1,5 +1,6 @@
 package com.naeng_biseo.naeng_biseo.dto;
 
+import com.naeng_biseo.naeng_biseo.domain.entities.Role;
 import com.naeng_biseo.naeng_biseo.domain.entities.User;
 import com.naeng_biseo.naeng_biseo.domain.enums.Gender;
 import com.naeng_biseo.naeng_biseo.domain.enums.UserStatus;
@@ -25,7 +26,20 @@ public class UserDto {
         private String nickname;
         private Gender gender;
         private String profilePicture;
-        private String passWordHash;
+        private String password;
+        private Role role;
+        private UserStatus stats;
+    }
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    public static class Update{
+        private String name;
+        private Date birthDate;
+        private String phoneNumber;
+        private String nickname;
+        private Gender gender;
+        private String profilePicture;
         private UserStatus stats;
     }
     @Getter
@@ -33,7 +47,7 @@ public class UserDto {
     @AllArgsConstructor
     public static class Login{
         private String email;
-        private String passWordHash;
+        private String password;
     }
     @Getter
     @Setter
@@ -49,6 +63,7 @@ public class UserDto {
         private Gender gender;
         private String profilePicture;
         private UserStatus stats;
+        private Role role;
 
         public Response(User user){
             this.id = user.getUserId();
@@ -60,7 +75,7 @@ public class UserDto {
             this.gender=user.getGender();
             this.profilePicture=user.getProfilePicture();
             this.stats=user.getStats();
-            
+            this.role = user.getRole();
         }
     }
 }

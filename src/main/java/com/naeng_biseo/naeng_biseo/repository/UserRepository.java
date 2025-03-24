@@ -22,18 +22,19 @@ public class UserRepository {
         return user;
     }
 
-    public User findOne(Long id) {
-        return em.find(User.class, id);
-    }
-
     public void remove(User user) {
         em.remove(user);
     }
 
-    public Optional<User>  findByEmail(String email) {
+    public User findByEmail(String email) {
         List<User> users = em.createQuery("SELECT u FROM User u WHERE u.email = :email", User.class)
                 .setParameter("email", email)
                 .getResultList();
-        return users.stream().findFirst();
+        return users.isEmpty() ? null : users.get(0);
     }
+
+    public Optional<User> findByEmailOptional(String email) {
+        return Optional.ofNullable(findByEmail(email));
+    }
+
 }

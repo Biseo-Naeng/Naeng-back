@@ -1,6 +1,10 @@
 spring:
   application:
     name: naeng-biseo
+  servlet:
+    multipart:
+      max-request-size: 30MB
+      max-file-size: 30MB
   datasource:
     url: jdbc:mysql://localhost:3306/naeng_biseo?useSSL=false&serverTimezone=UTC
     username:
@@ -13,3 +17,14 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
+swagger:
+  server:
+    local: http://localhost:8080
+
+springdoc:
+  swagger-ui:
+    tags-sorter: alpha
+
+jwt:
+  secret: f1bfa81d345e4a364b90b34dbb7db79cc3b8376480f78e9d72bde9377bfc9056

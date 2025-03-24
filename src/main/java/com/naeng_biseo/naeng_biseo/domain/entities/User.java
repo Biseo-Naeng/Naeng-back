@@ -44,10 +44,13 @@ public class User {
     private String profilePicture;
 
     @Column(length = 255)
-    private String passwordHash;
+    private String password;
 
     @Enumerated(EnumType.STRING)
     private UserStatus stats;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     public User(UserDto.Create userCreateDto, String encryptedPassword) {
         this.name = userCreateDto.getName();
@@ -57,7 +60,18 @@ public class User {
         this.nickname= userCreateDto.getNickname();
         this.gender = userCreateDto.getGender();
         this.profilePicture= userCreateDto.getProfilePicture();
-        this.passwordHash = encryptedPassword;
+        this.password = encryptedPassword;
+        this.role= userCreateDto.getRole();
         this.stats = userCreateDto.getStats();
+    }
+
+    public void change(UserDto.Update userUpdateDto) {
+        this.name = userUpdateDto.getName();
+        this.birthDate = userUpdateDto.getBirthDate();
+        this.phoneNumber = userUpdateDto.getPhoneNumber();
+        this.nickname= userUpdateDto.getNickname();
+        this.gender = userUpdateDto.getGender();
+        this.profilePicture= userUpdateDto.getProfilePicture();
+        this.stats = userUpdateDto.getStats();
     }
 }
