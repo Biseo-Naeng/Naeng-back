@@ -17,7 +17,7 @@ public class Recipe {
     @Lob
     private String instructions;
 
-    private Long userId;
+    private Integer userId;
 
     @Temporal(TemporalType.DATE)
     private Date writeDate;
