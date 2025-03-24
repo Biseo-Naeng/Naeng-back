@@ -17,9 +17,7 @@ public class Recipe {
     @Lob
     private String instructions;
 
-    @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name = "userId")
-    private User user;
+    private Long userId;
 
     @Temporal(TemporalType.DATE)
     private Date writeDate;
