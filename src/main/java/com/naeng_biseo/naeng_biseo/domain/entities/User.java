@@ -34,8 +34,8 @@ public class User {
     @Column(length = 50, unique = true)
     private String email;
 
-    @Column(length = 16, unique = true)
-    private String nickname;
+    @Column(length = 50, unique = true)
+    private String username; // 아이디 
 
     @Enumerated(EnumType.STRING)
     private Gender gender;
@@ -57,7 +57,7 @@ public class User {
         this.birthDate = userCreateDto.getBirthDate();
         this.phoneNumber = userCreateDto.getPhoneNumber();
         this.email= userCreateDto.getEmail();
-        this.nickname= userCreateDto.getNickname();
+        this.username = userCreateDto.getUsername();
         this.gender = userCreateDto.getGender();
         this.profilePicture= userCreateDto.getProfilePicture();
         this.password = encryptedPassword;
@@ -69,7 +69,6 @@ public class User {
         this.name = userUpdateDto.getName();
         this.birthDate = userUpdateDto.getBirthDate();
         this.phoneNumber = userUpdateDto.getPhoneNumber();
-        this.nickname= userUpdateDto.getNickname();
         this.gender = userUpdateDto.getGender();
         this.profilePicture= userUpdateDto.getProfilePicture();
         this.stats = userUpdateDto.getStats();
