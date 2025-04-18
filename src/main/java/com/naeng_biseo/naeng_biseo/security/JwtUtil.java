@@ -80,20 +80,25 @@ public class JwtUtil {
         return new UsernamePasswordAuthenticationToken(principal, accessToken, principal.getAuthorities());
     }
 
-    // JWT 유효성 검사
     public boolean validateToken(String token) {
         try {
-            Jwts.parserBuilder()
-                    .setSigningKey(key)
-                    .build()
-                    .parseClaimsJws(token);
-            Boolean hasKey = redisTemplate.hasKey("jwt:" + token);
-            return Boolean.TRUE.equals(hasKey);
+            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+            if (redisTemplate.hasKey("blacklist:" + token)) {
+                return false;
+            }
+            return true;
         } catch (Exception e) {
             return false;
         }
     }
+    public Long getExpiration(String token) {
+        Date expiration = parseClaims(token).getExpiration();
+        return expiration.getTime() - System.currentTimeMillis();
+    }
 
+    public String getUsernameFromToken(String token) {
+        return parseClaims(token).getSubject();
+    }
 
     private Claims parseClaims(String token) {
         try {

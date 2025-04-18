@@ -9,7 +9,9 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import com.naeng_biseo.naeng_biseo.security.JwtUtil;
 
+import java.time.Duration;
 import java.util.List;
 
 @RestController
@@ -17,6 +19,7 @@ import java.util.List;
 public class UserController {
     private final UserService service;
     private final StringRedisTemplate redisTemplate;
+    private final JwtUtil jwtUtil;
 
     @GetMapping("/user")
     public BaseResponse findUser(){
@@ -56,10 +59,16 @@ public class UserController {
         return BaseResponse.success(jwtToken);
     }
     @PostMapping("/auth/logout")
-    public BaseResponse logout(@RequestHeader("Authorization") String bearerToken) {
-        String token = bearerToken.replace("Bearer ", "");
-        redisTemplate.delete("jwt:" + token);
+    public BaseResponse logout(@AuthenticationPrincipal UserDetails userDetails,
+                               @RequestHeader("Authorization") String bearerToken) {
+
+        String accessToken = bearerToken.replace("Bearer ", "");
+        Long expiration = jwtUtil.getExpiration(accessToken);
+        String username = userDetails.getUsername();
+
+        redisTemplate.opsForValue().set("blacklist:" + accessToken, "logout", Duration.ofMillis(expiration));
+        redisTemplate.delete("refresh:user:" + username);
+
         return BaseResponse.success("로그아웃 완료");
     }
-
 }

@@ -74,10 +74,11 @@ public class UserService {
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         JwtToken token = jwtUtil.generateToken(authentication);
 
-        // Redis에 토큰 저장 (accessToken 기준, TTL: 24시간)
-        redisTemplate.opsForValue().set("jwt:" + token.getAccessToken(), username, Duration.ofHours(24));
+        // Refresh Token Redis에 저장
+        redisTemplate.opsForValue().set("refresh:user:" + username, token.getRefreshToken(), Duration.ofDays(7));
 
         return token;
     }
+
 
 }
