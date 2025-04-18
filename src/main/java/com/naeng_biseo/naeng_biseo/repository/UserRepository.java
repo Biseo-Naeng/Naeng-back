@@ -36,5 +36,11 @@ public class UserRepository {
     public Optional<User> findByEmailOptional(String email) {
         return Optional.ofNullable(findByEmail(email));
     }
+    public Optional<User> findByUsernameOptional(String username) {
+        List<User> users = em.createQuery("SELECT u FROM User u WHERE u.username = :username", User.class)
+                .setParameter("username", username)
+                .getResultList();
+        return users.isEmpty() ? Optional.empty() : Optional.of(users.get(0));
+    }
 
 }

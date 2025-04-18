@@ -5,6 +5,7 @@ import com.naeng_biseo.naeng_biseo.dto.UserDto;
 import com.naeng_biseo.naeng_biseo.exception.BaseResponse;
 import com.naeng_biseo.naeng_biseo.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService service;
+    private final StringRedisTemplate redisTemplate;
 
     @GetMapping("/user")
     public BaseResponse findUser(){
@@ -48,9 +50,16 @@ public class UserController {
 
     @PostMapping("/auth/login")
     public BaseResponse saveUser(@RequestBody UserDto.Login userLoginDto){
-        String username=userLoginDto.getUsername();
+        String username = userLoginDto.getUsername();
         String password = userLoginDto.getPassword();
         JwtToken jwtToken = service.login(username, password);
         return BaseResponse.success(jwtToken);
     }
+    @PostMapping("/auth/logout")
+    public BaseResponse logout(@RequestHeader("Authorization") String bearerToken) {
+        String token = bearerToken.replace("Bearer ", "");
+        redisTemplate.delete("jwt:" + token);
+        return BaseResponse.success("로그아웃 완료");
+    }
+
 }

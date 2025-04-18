@@ -4,8 +4,10 @@ import com.naeng_biseo.naeng_biseo.dto.JwtToken;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -22,10 +24,13 @@ import java.util.Date;
 @Component
 public class JwtUtil {
     private final SecretKey key;
+    private final StringRedisTemplate redisTemplate;
 
-    public JwtUtil(@Value("${jwt.secret}") String secretKey) {
+    public JwtUtil(@Value("${jwt.secret}") String secretKey,
+                   StringRedisTemplate redisTemplate) {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         this.key = Keys.hmacShaKeyFor(keyBytes);
+        this.redisTemplate = redisTemplate;
     }
 
     // JWT 토큰 생성
@@ -82,7 +87,8 @@ public class JwtUtil {
                     .setSigningKey(key)
                     .build()
                     .parseClaimsJws(token);
-            return true;
+            Boolean hasKey = redisTemplate.hasKey("jwt:" + token);
+            return Boolean.TRUE.equals(hasKey);
         } catch (Exception e) {
             return false;
         }

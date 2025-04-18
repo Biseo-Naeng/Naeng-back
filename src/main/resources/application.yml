@@ -13,6 +13,10 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  data:
+    redis:
+      host: localhost
+      port: 6379
 
 swagger:
   server:
@@ -23,4 +27,4 @@ springdoc:
     tags-sorter: alpha
 
 jwt:
-  secret: f1bfa81d345e4a364b90b34dbb7db79cc3b8376480f78e9d72bde9377bfc9056
+  secret: ${JWT_SECRET}

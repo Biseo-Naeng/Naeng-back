@@ -6,6 +6,7 @@ import com.naeng_biseo.naeng_biseo.dto.UserDto;
 import com.naeng_biseo.naeng_biseo.repository.UserRepository;
 import com.naeng_biseo.naeng_biseo.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -15,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,6 +25,8 @@ import java.util.stream.Collectors;
 public class UserService {
     private final UserRepository repository;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
+    private final StringRedisTemplate redisTemplate;
+
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private final JwtUtil jwtUtil;
 
@@ -68,6 +72,12 @@ public class UserService {
     public JwtToken login(String username, String password) {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-        return jwtUtil.generateToken(authentication);
+        JwtToken token = jwtUtil.generateToken(authentication);
+
+        // Redis에 토큰 저장 (accessToken 기준, TTL: 24시간)
+        redisTemplate.opsForValue().set("jwt:" + token.getAccessToken(), username, Duration.ofHours(24));
+
+        return token;
     }
+
 }
