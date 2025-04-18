@@ -23,7 +23,7 @@ public class UserDto {
         private Date birthDate;
         private String phoneNumber;
         private String email;
-        private String nickname;
+        private String username;
         private Gender gender;
         private String profilePicture;
         private String password;
@@ -37,7 +37,7 @@ public class UserDto {
         private String name;
         private Date birthDate;
         private String phoneNumber;
-        private String nickname;
+        private String username;
         private Gender gender;
         private String profilePicture;
         private UserStatus stats;
@@ -46,7 +46,7 @@ public class UserDto {
     @Setter
     @AllArgsConstructor
     public static class Login{
-        private String email;
+        private String username;
         private String password;
     }
     @Getter
@@ -59,7 +59,7 @@ public class UserDto {
         private Date birthDate;
         private String phoneNumber;
         private String email;
-        private String nickname;
+        private String username;
         private Gender gender;
         private String profilePicture;
         private UserStatus stats;
@@ -71,7 +71,7 @@ public class UserDto {
             this.birthDate=user.getBirthDate();
             this.phoneNumber=user.getPhoneNumber();
             this.email=user.getEmail();
-            this.nickname=user.getNickname();
+            this.username=user.getUsername();
             this.gender=user.getGender();
             this.profilePicture=user.getProfilePicture();
             this.stats=user.getStats();

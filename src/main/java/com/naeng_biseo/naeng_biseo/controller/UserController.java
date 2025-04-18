@@ -48,9 +48,9 @@ public class UserController {
 
     @PostMapping("/auth/login")
     public BaseResponse saveUser(@RequestBody UserDto.Login userLoginDto){
-        String email = userLoginDto.getEmail();
+        String username=userLoginDto.getUsername();
         String password = userLoginDto.getPassword();
-        JwtToken jwtToken = service.login(email, password);
+        JwtToken jwtToken = service.login(username, password);
         return BaseResponse.success(jwtToken);
     }
 }

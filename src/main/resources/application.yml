@@ -1,10 +1,6 @@
 spring:
   application:
     name: naeng-biseo
-  servlet:
-    multipart:
-      max-request-size: 30MB
-      max-file-size: 30MB
   datasource:
     url: jdbc:mysql://localhost:3306/naeng_biseo?useSSL=false&serverTimezone=UTC
     username:

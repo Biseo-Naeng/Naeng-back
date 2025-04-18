@@ -65,8 +65,8 @@ public class UserService {
     }
 
     @Transactional
-    public JwtToken login(String email, String password) {
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email, password);
+    public JwtToken login(String username, String password) {
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         return jwtUtil.generateToken(authentication);
     }
