@@ -9,16 +9,13 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class UserRepository {
+public class AuthRepository {
     @PersistenceContext
     private EntityManager em;
 
-    public List<User> findAll() {
-        return em.createQuery("select m from User m", User.class).getResultList();
-    }
-
-    public void remove(User user) {
-        em.remove(user);
+    public User save(User user) {
+        em.persist(user);
+        return user;
     }
 
     public User findByEmail(String email) {
@@ -32,10 +29,4 @@ public class UserRepository {
         return Optional.ofNullable(findByEmail(email));
     }
 
-    public Optional<User> findByUsernameOptional(String username) {
-        List<User> users = em.createQuery("SELECT u FROM User u WHERE u.username = :username", User.class)
-                .setParameter("username", username)
-                .getResultList();
-        return users.isEmpty() ? Optional.empty() : Optional.of(users.get(0));
-    }
 }

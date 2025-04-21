@@ -25,30 +25,11 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository repository;
-    private final AuthenticationManagerBuilder authenticationManagerBuilder;
-    private final StringRedisTemplate redisTemplate;
-    private final MailService mailService;
-    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-    private final JwtUtil jwtUtil;
 
     public List<UserDto.Response> findAll(){
         List<User> user = repository.findAll();
         return user.stream().map(UserDto.Response::new).collect(Collectors.toList());
     }
-
-    @Transactional
-    public Integer save(UserDto.Create userCreateDto){
-        validateDuplicateUser(userCreateDto);
-        String encryptedPassword = passwordEncoder.encode(userCreateDto.getPassword());
-        User user = new User(userCreateDto, encryptedPassword);
-        User saveUser= repository.save(user);
-        return saveUser.getUserId();
-    }
-    private void validateDuplicateUser(UserDto.Create userCreateDto) {
-        repository.findByEmailOptional(userCreateDto.getEmail())
-                .ifPresent(user -> {
-                    throw new IllegalArgumentException("이미 존재하는 회원입니다.");
-                });    }
 
     public UserDto.Response findOne(String email){
         User user = repository.findByEmail(email);
@@ -67,34 +48,5 @@ public class UserService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 이메일을 찾을 수 없습니다."));
         user.change(userUpdateDto);
         return new UserDto.Response(user);
-    }
-
-    @Transactional
-    public JwtToken login(String username, String password) {
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
-        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-        JwtToken token = jwtUtil.generateToken(authentication);
-
-        // Refresh Token Redis에 저장
-        redisTemplate.opsForValue().set("refresh:user:" + username, token.getRefreshToken(), Duration.ofDays(7));
-
-        return token;
-    }
-
-    @Transactional
-    public void setAuthEmail(String email) throws MessagingException {
-        mailService.sendAuthCodeEmail(email);
-    }
-
-    public boolean verifyAuthCode(String email, String inputCode) {
-        String key = email;
-        String savedCode = redisTemplate.opsForValue().get(key);
-
-        if (savedCode != null && savedCode.trim().equals(inputCode.trim())) {
-            redisTemplate.delete(key);
-            return true;
-        }
-
-        return false;
     }
 }
