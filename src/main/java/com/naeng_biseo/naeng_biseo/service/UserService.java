@@ -5,6 +5,7 @@ import com.naeng_biseo.naeng_biseo.dto.JwtToken;
 import com.naeng_biseo.naeng_biseo.dto.UserDto;
 import com.naeng_biseo.naeng_biseo.repository.UserRepository;
 import com.naeng_biseo.naeng_biseo.security.JwtUtil;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpStatus;
@@ -26,7 +27,7 @@ public class UserService {
     private final UserRepository repository;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final StringRedisTemplate redisTemplate;
-
+    private final MailService mailService;
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private final JwtUtil jwtUtil;
 
@@ -80,5 +81,20 @@ public class UserService {
         return token;
     }
 
+    @Transactional
+    public void setAuthEmail(String email) throws MessagingException {
+        mailService.sendAuthCodeEmail(email);
+    }
 
+    public boolean verifyAuthCode(String email, String inputCode) {
+        String key = email;
+        String savedCode = redisTemplate.opsForValue().get(key);
+
+        if (savedCode != null && savedCode.trim().equals(inputCode.trim())) {
+            redisTemplate.delete(key);
+            return true;
+        }
+
+        return false;
+    }
 }
