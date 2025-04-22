@@ -13,3 +13,30 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  data:
+    redis:
+      host: localhost
+      port: 6379
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_ID}
+    password: ${MAIL_PW}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+
+swagger:
+  server:
+    local: http://localhost:8080
+
+springdoc:
+  swagger-ui:
+    tags-sorter: alpha
+
+jwt:
+  secret: ${JWT_SECRET}
