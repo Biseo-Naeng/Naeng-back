@@ -39,4 +39,10 @@ public class UserController {
         UserDto.Response updatedUser = service.update(userDetails.getUsername(), userUpdateDto);
         return BaseResponse.success(updatedUser);
     }
+
+    @PostMapping("/find-userid")
+    public BaseResponse findUserId(@RequestBody UserDto.FindUserId findUserIdDto) {
+        String username = service.findUserId(findUserIdDto);
+        return BaseResponse.success(username);
+    }
 }
