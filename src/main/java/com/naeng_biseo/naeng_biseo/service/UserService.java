@@ -49,4 +49,12 @@ public class UserService {
         user.change(userUpdateDto);
         return new UserDto.Response(user);
     }
+
+    public String findUserId(UserDto.FindUserId findUserIdDto) {
+        User user = repository.findByEmail(findUserIdDto.getEmail());
+        if (user == null || !user.getName().equals(findUserIdDto.getName())) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "해당하는 사용자를 찾을 수 없습니다.");
+        }
+        return user.getUsername();
+    }
 }
