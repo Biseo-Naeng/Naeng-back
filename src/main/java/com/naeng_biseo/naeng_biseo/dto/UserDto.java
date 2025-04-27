@@ -78,4 +78,11 @@ public class UserDto {
             this.role = user.getRole();
         }
     }
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    public static class FindUserId {
+        private String name;
+        private String email;
+    }
 }
