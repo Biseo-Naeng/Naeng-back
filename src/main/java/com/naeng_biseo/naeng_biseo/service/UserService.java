@@ -57,4 +57,16 @@ public class UserService {
         }
         return user.getUsername();
     }
+
+    @Transactional
+    public void changePassword(UserDto.ChangePassword changePasswordDto) {
+        User user = repository.findByEmail(changePasswordDto.getEmail());
+        if (user == null || !user.getUsername().equals(changePasswordDto.getUsername()) || 
+            !user.getName().equals(changePasswordDto.getName())) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "해당하는 사용자를 찾을 수 없습니다.");
+        }
+        
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        user.changePassword(passwordEncoder.encode(changePasswordDto.getNewPassword()));
+    }
 }
