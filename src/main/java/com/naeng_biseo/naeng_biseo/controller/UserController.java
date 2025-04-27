@@ -4,6 +4,7 @@ import com.naeng_biseo.naeng_biseo.dto.UserDto;
 import com.naeng_biseo.naeng_biseo.exception.BaseResponse;
 import com.naeng_biseo.naeng_biseo.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -44,5 +45,11 @@ public class UserController {
     public BaseResponse findUserId(@RequestBody UserDto.FindUserId findUserIdDto) {
         String username = service.findUserId(findUserIdDto);
         return BaseResponse.success(username);
+    }
+
+    @PostMapping("/password")
+    public ResponseEntity<Void> changePassword(@RequestBody UserDto.ChangePassword changePasswordDto) {
+        service.changePassword(changePasswordDto);
+        return ResponseEntity.ok().build();
     }
 }
