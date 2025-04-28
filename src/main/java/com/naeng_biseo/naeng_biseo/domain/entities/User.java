@@ -73,4 +73,8 @@ public class User {
         this.profilePicture= userUpdateDto.getProfilePicture();
         this.stats = userUpdateDto.getStats();
     }
+
+    public void changePassword(String newPassword) {
+        this.password = newPassword;
+    }
 }

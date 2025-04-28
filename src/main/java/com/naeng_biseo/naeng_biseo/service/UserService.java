@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository repository;
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public List<UserDto.Response> findAll(){
         List<User> user = repository.findAll();
@@ -56,5 +57,16 @@ public class UserService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "해당하는 사용자를 찾을 수 없습니다.");
         }
         return user.getUsername();
+    }
+
+    @Transactional
+    public void changePassword(UserDto.ChangePassword changePasswordDto) {
+        User user = repository.findByEmail(changePasswordDto.getEmail());
+        if (user == null || !user.getUsername().equals(changePasswordDto.getUsername()) || 
+            !user.getName().equals(changePasswordDto.getName())) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "해당하는 사용자를 찾을 수 없습니다.");
+        }
+                
+        user.changePassword(passwordEncoder.encode(changePasswordDto.getNewPassword()));
     }
 }
