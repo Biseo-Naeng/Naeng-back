@@ -2,9 +2,9 @@ spring:
   application:
     name: naeng-biseo
   datasource:
-    url: jdbc:mysql://localhost:3306/naeng_biseo?useSSL=false&serverTimezone=UTC
-    username:
-    password:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
@@ -13,13 +13,14 @@ spring:
     properties:
       hibernate:
         format_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
   data:
     redis:
-      host: localhost
-      port: 6379
+      host: ${SPRING_REDIS_HOST}
+      port: ${SPRING_REDIS_PORT}
   mail:
-    host: smtp.gmail.com
-    port: 587
+    host: ${MAIL_HOST}
+    port: ${MAIL_PORT}
     username: ${MAIL_ID}
     password: ${MAIL_PW}
     properties:
@@ -36,7 +37,13 @@ swagger:
 
 springdoc:
   swagger-ui:
+    path: /swagger-ui.html
     tags-sorter: alpha
+    operations-sorter: alpha
+  api-docs:
+    path: /v3/api-docs
+  packages-to-scan: com.naeng_biseo.naeng_biseo
+  paths-to-match: /**
 
 jwt:
   secret: ${JWT_SECRET}
