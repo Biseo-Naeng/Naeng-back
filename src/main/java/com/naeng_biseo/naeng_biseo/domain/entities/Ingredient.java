@@ -2,8 +2,14 @@ package com.naeng_biseo.naeng_biseo.domain.entities;
 
 import com.naeng_biseo.naeng_biseo.domain.enums.IngredientCategory;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "Ingredients")
 public class Ingredient {
 
@@ -17,4 +23,8 @@ public class Ingredient {
     @Enumerated(EnumType.STRING)
     private IngredientCategory category;
 
+    public Ingredient(String name, IngredientCategory category) {
+        this.name = name;
+        this.category = category;
+    }
 }
