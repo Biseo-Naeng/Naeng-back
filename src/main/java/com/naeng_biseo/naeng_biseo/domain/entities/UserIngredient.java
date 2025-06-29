@@ -1,9 +1,16 @@
 package com.naeng_biseo.naeng_biseo.domain.entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import java.util.Date;
 
 @Entity
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor  
 @Table(name = "UserIngredients")
 public class UserIngredient {
 
@@ -25,6 +32,11 @@ public class UserIngredient {
     @Temporal(TemporalType.DATE)
     private Date expirationDate;
 
-    // getters/setters, 생성자 등
+    public UserIngredient(User user, Ingredient ingredient, String instructions, Date expirationDate) {
+        this.user = user;
+        this.ingredient = ingredient;
+        this.instructions = instructions;
+        this.expirationDate = expirationDate;
+    }
 }
 
