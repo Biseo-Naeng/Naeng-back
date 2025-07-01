@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.List;
 
 public class RefrigeratorDto {
 
@@ -72,6 +73,51 @@ public class RefrigeratorDto {
                     return "조미료";
                 default:
                     return "냉장";
+            }
+        }
+    }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @Schema(name = "IngredientListResponse")
+    public static class IngredientListResponse {
+        private Integer userId;
+        private Integer targetUserId;
+        private Integer ingredientsCount;
+        private List<IngredientInfo> ingredients;
+
+        @Getter
+        @Setter
+        @AllArgsConstructor
+        public static class IngredientInfo {
+            private Integer id;
+            private String name;
+            private String category;
+            private String instruction;
+            private Date expirationDate;
+
+            public IngredientInfo(UserIngredient userIngredient) {
+                this.id = userIngredient.getUserIngredientId();
+                this.name = userIngredient.getIngredient().getName();
+                this.category = getCategoryString(userIngredient.getIngredient().getCategory());
+                this.instruction = userIngredient.getInstructions();
+                this.expirationDate = userIngredient.getExpirationDate();
+            }
+
+            private String getCategoryString(IngredientCategory category) {
+                switch (category) {
+                    case FROZEN:
+                        return "냉동";
+                    case REFRIGERATED:
+                        return "냉장";
+                    case AMBIENT:
+                        return "실온";
+                    case SEASONING:
+                        return "조미료";
+                    default:
+                        return "냉장";
+                }
             }
         }
     }
