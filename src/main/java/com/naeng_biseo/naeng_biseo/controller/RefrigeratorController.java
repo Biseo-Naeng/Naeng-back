@@ -17,4 +17,10 @@ public class RefrigeratorController {
         RefrigeratorDto.Response response = service.addIngredient(userId, addIngredientDto);
         return BaseResponse.success(response);
     }
+
+    @GetMapping("/{userId}")
+    public BaseResponse getUserIngredients(@PathVariable Integer userId, @RequestParam String v) {
+        RefrigeratorDto.IngredientListResponse response = service.getUserIngredients(userId, v);
+        return BaseResponse.success(response);
+    }
 }
