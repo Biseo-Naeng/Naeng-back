@@ -38,4 +38,12 @@ public class UserRepository {
                 .getResultList();
         return users.isEmpty() ? Optional.empty() : Optional.of(users.get(0));
     }
+
+    public User findById(Integer userId) {
+        return em.find(User.class, userId);
+    }
+
+    public Optional<User> findByIdOptional(Integer userId) {
+        return Optional.ofNullable(findById(userId));
+    }
 }
