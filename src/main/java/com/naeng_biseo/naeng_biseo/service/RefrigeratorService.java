@@ -14,6 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class RefrigeratorService {
@@ -47,5 +50,49 @@ public class RefrigeratorService {
         userIngredient = userIngredientRepository.save(userIngredient);
 
         return new RefrigeratorDto.Response(userIngredient);
+    }
+
+    @Transactional(readOnly = true)
+    public RefrigeratorDto.IngredientListResponse getUserIngredients(Integer userId, String category) {
+        // 사용자 조회
+        User user = userRepository.findByIdOptional(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 사용자를 찾을 수 없습니다."));
+
+        // 사용자의 재료 리스트 조회
+        List<UserIngredient> userIngredients = userIngredientRepository.findByUserId(userId);
+
+        // 카테고리 필터링
+        IngredientCategory filterCategory = getCategoryFromString(category);
+        userIngredients = userIngredients.stream()
+                .filter(ui -> ui.getIngredient().getCategory() == filterCategory)
+                .collect(Collectors.toList());
+
+        // DTO로 변환
+        List<RefrigeratorDto.IngredientListResponse.IngredientInfo> ingredientInfoList = 
+                userIngredients.stream()
+                        .map(RefrigeratorDto.IngredientListResponse.IngredientInfo::new)
+                        .collect(Collectors.toList());
+
+        return new RefrigeratorDto.IngredientListResponse(
+                userId,
+                userId, // targetUserId와 userId가 같음
+                ingredientInfoList.size(),
+                ingredientInfoList
+        );
+    }
+
+    private IngredientCategory getCategoryFromString(String category) {
+        switch (category) {
+            case "냉동":
+                return IngredientCategory.FROZEN;
+            case "냉장":
+                return IngredientCategory.REFRIGERATED;
+            case "실온":
+                return IngredientCategory.AMBIENT;
+            case "조미료":
+                return IngredientCategory.SEASONING;
+            default:
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "올바르지 않은 카테고리입니다.");
+        }
     }
 }

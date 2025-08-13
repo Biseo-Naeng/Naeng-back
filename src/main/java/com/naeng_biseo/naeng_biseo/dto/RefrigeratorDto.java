@@ -8,7 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.util.List;
 
 public class RefrigeratorDto {
 
@@ -21,7 +22,7 @@ public class RefrigeratorDto {
         private String name;
         private String instruction;
         private String category;
-        private Date expirationDate;
+        private LocalDate expirationDate;
 
         public IngredientCategory getCategoryEnum() {
             switch (category) {
@@ -49,7 +50,7 @@ public class RefrigeratorDto {
         private String name;
         private String instruction;
         private String category;
-        private Date expirationDate;
+        private LocalDate expirationDate;
 
         public Response(UserIngredient userIngredient) {
             this.userId = userIngredient.getUser().getUserId();
@@ -72,6 +73,51 @@ public class RefrigeratorDto {
                     return "조미료";
                 default:
                     return "냉장";
+            }
+        }
+    }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    @Schema(name = "IngredientListResponse")
+    public static class IngredientListResponse {
+        private Integer userId;
+        private Integer targetUserId;
+        private Integer ingredientsCount;
+        private List<IngredientInfo> ingredients;
+
+        @Getter
+        @Setter
+        @AllArgsConstructor
+        public static class IngredientInfo {
+            private Integer id;
+            private String name;
+            private String category;
+            private String instruction;
+            private LocalDate expirationDate;
+
+            public IngredientInfo(UserIngredient userIngredient) {
+                this.id = userIngredient.getUserIngredientId();
+                this.name = userIngredient.getIngredient().getName();
+                this.category = getCategoryString(userIngredient.getIngredient().getCategory());
+                this.instruction = userIngredient.getInstructions();
+                this.expirationDate = userIngredient.getExpirationDate();
+            }
+
+            private String getCategoryString(IngredientCategory category) {
+                switch (category) {
+                    case FROZEN:
+                        return "냉동";
+                    case REFRIGERATED:
+                        return "냉장";
+                    case AMBIENT:
+                        return "실온";
+                    case SEASONING:
+                        return "조미료";
+                    default:
+                        return "냉장";
+                }
             }
         }
     }
