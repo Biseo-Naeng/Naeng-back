@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -29,10 +29,9 @@ public class UserIngredient {
     @Column(length = 1024)
     private String instructions;
 
-    @Temporal(TemporalType.DATE)
-    private Date expirationDate;
+    private LocalDate expirationDate;
 
-    public UserIngredient(User user, Ingredient ingredient, String instructions, Date expirationDate) {
+    public UserIngredient(User user, Ingredient ingredient, String instructions, LocalDate expirationDate) {
         this.user = user;
         this.ingredient = ingredient;
         this.instructions = instructions;

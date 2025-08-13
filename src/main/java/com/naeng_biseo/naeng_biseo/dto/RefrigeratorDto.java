@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 public class RefrigeratorDto {
@@ -22,7 +22,7 @@ public class RefrigeratorDto {
         private String name;
         private String instruction;
         private String category;
-        private Date expirationDate;
+        private LocalDate expirationDate;
 
         public IngredientCategory getCategoryEnum() {
             switch (category) {
@@ -50,7 +50,7 @@ public class RefrigeratorDto {
         private String name;
         private String instruction;
         private String category;
-        private Date expirationDate;
+        private LocalDate expirationDate;
 
         public Response(UserIngredient userIngredient) {
             this.userId = userIngredient.getUser().getUserId();
@@ -95,7 +95,7 @@ public class RefrigeratorDto {
             private String name;
             private String category;
             private String instruction;
-            private Date expirationDate;
+            private LocalDate expirationDate;
 
             public IngredientInfo(UserIngredient userIngredient) {
                 this.id = userIngredient.getUserIngredientId();
