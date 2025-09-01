@@ -42,6 +42,33 @@ public class RefrigeratorDto {
 
     @Getter
     @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class UpdateIngredient {
+        private String name;
+        private String instruction;
+        private String category;
+        private LocalDate expirationDate;
+
+        public IngredientCategory getCategoryEnum() {
+            if (category == null) return null;
+            switch (category) {
+                case "냉동":
+                    return IngredientCategory.FROZEN;
+                case "냉장":
+                    return IngredientCategory.REFRIGERATED;
+                case "실온":
+                    return IngredientCategory.AMBIENT;
+                case "조미료":
+                    return IngredientCategory.SEASONING;
+                default:
+                    throw new IllegalArgumentException("올바르지 않은 카테고리 값입니다: " + category);
+            }
+        }
+    }
+
+    @Getter
+    @Setter
     @AllArgsConstructor
     @Schema(name = "RefrigeratorResponse")
     public static class Response {

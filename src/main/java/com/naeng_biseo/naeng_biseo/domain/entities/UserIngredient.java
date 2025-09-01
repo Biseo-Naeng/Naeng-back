@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDate;
 
@@ -22,13 +23,16 @@ public class UserIngredient {
     @JoinColumn(name = "userId")
     private User user;
 
+    @Setter
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "ingredientId")
     private Ingredient ingredient;
 
+    @Setter
     @Column(length = 1024)
     private String instructions;
 
+    @Setter
     private LocalDate expirationDate;
 
     public UserIngredient(User user, Ingredient ingredient, String instructions, LocalDate expirationDate) {

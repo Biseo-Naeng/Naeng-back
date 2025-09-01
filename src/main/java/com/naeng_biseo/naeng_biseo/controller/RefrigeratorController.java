@@ -23,4 +23,32 @@ public class RefrigeratorController {
         RefrigeratorDto.IngredientListResponse response = service.getUserIngredients(userId, v);
         return BaseResponse.success(response);
     }
+
+    @PutMapping("/{userId}/{ingredientId}")
+    public BaseResponse updateIngredient(
+            @PathVariable Integer userId,
+            @PathVariable Integer ingredientId,
+            @RequestBody RefrigeratorDto.UpdateIngredient dto
+    ) {
+        RefrigeratorDto.Response response = service.updateIngredient(userId, ingredientId, dto);
+        return BaseResponse.success(response);
+    }
+
+    @GetMapping("/{userId}/{ingredientId}")
+    public BaseResponse getIngredient(
+            @PathVariable Integer userId,
+            @PathVariable Integer ingredientId
+    ) {
+        RefrigeratorDto.Response response = service.getIngredient(userId, ingredientId);
+        return BaseResponse.success(response);
+    }
+
+    @DeleteMapping("/{userId}/{ingredientId}")
+    public BaseResponse deleteIngredient(
+            @PathVariable Integer userId,
+            @PathVariable Integer ingredientId
+    ) {
+        service.deleteIngredient(userId, ingredientId);
+        return BaseResponse.success("재료가 삭제되었습니다.");
+    }
 }

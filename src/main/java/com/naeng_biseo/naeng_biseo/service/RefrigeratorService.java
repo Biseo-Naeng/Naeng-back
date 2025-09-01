@@ -95,4 +95,69 @@ public class RefrigeratorService {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "올바르지 않은 카테고리입니다.");
         }
     }
+
+    @Transactional
+    public RefrigeratorDto.Response updateIngredient(Integer userId, Integer ingredientId, RefrigeratorDto.UpdateIngredient dto) {
+        User user = userRepository.findByIdOptional(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 사용자를 찾을 수 없습니다."));
+
+        UserIngredient userIngredient = userIngredientRepository.findByIdOptional(ingredientId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 재료를 찾을 수 없습니다."));
+
+        if (!userIngredient.getUser().getUserId().equals(user.getUserId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "본인 재료만 수정할 수 있습니다.");
+        }
+
+        if (dto.getInstruction() != null) {
+            userIngredient.setInstructions(dto.getInstruction());
+        }
+        if (dto.getExpirationDate() != null) {
+            userIngredient.setExpirationDate(dto.getExpirationDate());
+        }
+        if (dto.getName() != null && dto.getCategory() != null) {
+            IngredientCategory category = dto.getCategoryEnum();
+            Ingredient ingredient = ingredientRepository.findByNameAndCategory(dto.getName(), category);
+            if (ingredient == null) {
+                ingredient = ingredientRepository.save(new Ingredient(dto.getName(), category));
+            }
+            userIngredient.setIngredient(ingredient);
+        }
+
+        return new RefrigeratorDto.Response(userIngredient);
+    }
+
+    @Transactional(readOnly = true)
+    public RefrigeratorDto.Response getIngredient(Integer userId, Integer ingredientId) {
+        // 사용자 확인
+        User user = userRepository.findByIdOptional(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 사용자를 찾을 수 없습니다."));
+
+        // 해당 user가 등록한 재료 찾기
+        UserIngredient userIngredient = userIngredientRepository.findByIdOptional(ingredientId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 재료를 찾을 수 없습니다."));
+
+        if (!userIngredient.getUser().getUserId().equals(user.getUserId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "본인 재료만 조회할 수 있습니다.");
+        }
+
+        return new RefrigeratorDto.Response(userIngredient);
+    }
+    @Transactional
+    public void deleteIngredient(Integer userId, Integer ingredientId) {
+        // 사용자 확인
+        User user = userRepository.findByIdOptional(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 사용자를 찾을 수 없습니다."));
+
+        // 사용자 재료 확인
+        UserIngredient userIngredient = userIngredientRepository.findByIdOptional(ingredientId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 재료를 찾을 수 없습니다."));
+
+        if (!userIngredient.getUser().getUserId().equals(user.getUserId())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "본인 재료만 삭제할 수 있습니다.");
+        }
+
+        // 삭제 실행
+        userIngredientRepository.delete(userIngredient);
+    }
+
 }

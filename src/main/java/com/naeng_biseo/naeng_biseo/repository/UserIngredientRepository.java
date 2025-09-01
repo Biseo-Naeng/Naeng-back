@@ -1,11 +1,13 @@
 package com.naeng_biseo.naeng_biseo.repository;
 
+import com.naeng_biseo.naeng_biseo.domain.entities.User;
 import com.naeng_biseo.naeng_biseo.domain.entities.UserIngredient;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class UserIngredientRepository {
@@ -26,4 +28,12 @@ public class UserIngredientRepository {
     public UserIngredient findById(Integer userIngredientId) {
         return em.find(UserIngredient.class, userIngredientId);
     }
-} 
+
+    public Optional<UserIngredient> findByIdOptional(Integer userId) {
+        return Optional.ofNullable(findById(userId));
+    }
+
+    public void delete(UserIngredient userIngredient) {
+        em.remove(userIngredient);
+    }
+}
